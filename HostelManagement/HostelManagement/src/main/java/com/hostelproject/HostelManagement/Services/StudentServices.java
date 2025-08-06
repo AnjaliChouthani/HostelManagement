@@ -4,6 +4,7 @@ import com.hostelproject.HostelManagement.Entity.Room;
 import com.hostelproject.HostelManagement.Entity.Student;
 import com.hostelproject.HostelManagement.Repository.RoomRepository;
 import com.hostelproject.HostelManagement.Repository.StudentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,24 +28,30 @@ public class StudentServices {
     @Autowired
     private RoomRepository roomRepository;
 
-    public ResponseEntity<String> addStudent(Student student) throws Exception {
+    public ResponseEntity<String> addStudent(Student student){
         //incomplete as when student is created then room should assign  it
         //check room avaialable and then assign it
+
+        //checking already user with same name number exist or not if exist throw error other wisse createit
+       Optional<Student>existed= studentRepository.findByRollnoAndName(student.getRollno(),student.getName());
+           if(existed.isPresent()) {
+               return new ResponseEntity<>("Already Exit User ", HttpStatus.BAD_REQUEST);
+           }
+
        List<Room>roomList= roomServices.getAvailableRoom();
 
             if(roomList.isEmpty()){
-                throw new Exception("All the Rooms are Allocated");
+              return new ResponseEntity<>("All Rooms are filled ",HttpStatus.NOT_ACCEPTABLE);
+
             }
 
            Room assignedRoom= roomList.get(0);
             //set student
          student.setRoom(assignedRoom);
-           Student savedStudent=studentRepository.save(student);
+        studentRepository.save(student);
            //update
         assignedRoom.setCurrentNumberStudent(assignedRoom.getCurrentNumberStudent()+1);
         roomRepository.save(assignedRoom);
-
-        studentRepository.save(student);
         return new ResponseEntity<>("Save Student Successfully with Room Number "+assignedRoom.getRoomNumber(), HttpStatus.CREATED);
     }
 

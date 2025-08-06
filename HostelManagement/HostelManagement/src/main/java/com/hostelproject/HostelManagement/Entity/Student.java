@@ -1,5 +1,6 @@
 package com.hostelproject.HostelManagement.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -14,47 +15,19 @@ public class Student {
     private String rollno;
     private String name;
     private String phoneNo;
-    @JsonManagedReference
+
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
     private List<ComplaintMaintainece>complaintMaintaineceList;
 
-    public Student(List<ComplaintMaintainece> complaintMaintaineceList) {
-        this.complaintMaintaineceList = complaintMaintaineceList;
-    }
-
-    public List<ComplaintMaintainece> getComplaintMaintaineceList() {
-        return complaintMaintaineceList;
-    }
-
-    public void setComplaintMaintaineceList(List<ComplaintMaintainece> complaintMaintaineceList) {
-        this.complaintMaintaineceList = complaintMaintaineceList;
-    }
-
-    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
-      private List<LeaveRequest> leaveRequestList;
-
-    public Student(Long id, String rollno, String name, String phoneNo, Room room, List<LeaveRequest> leaveRequestList) {
-        this.id = id;
-        this.rollno = rollno;
-        this.name = name;
-        this.phoneNo = phoneNo;
-        this.room = room;
-        this.leaveRequestList = leaveRequestList;
-    }
-
-    public List<LeaveRequest> getLeaveList() {
-        return leaveRequestList;
-    }
-
-    public void setLeaveList(List<LeaveRequest> leaveRequestList) {
-        this.leaveRequestList = leaveRequestList;
-    }
-
-
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
+    private List<LeaveRequest> leaveRequestList;
 
     public Student() {
     }
@@ -99,6 +72,23 @@ public class Student {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public List<ComplaintMaintainece> getComplaintMaintaineceList() {
+        return complaintMaintaineceList;
+    }
+
+    public void setComplaintMaintaineceList(List<ComplaintMaintainece> complaintMaintaineceList) {
+        this.complaintMaintaineceList = complaintMaintaineceList;
+    }
+
+
+    public List<LeaveRequest> getLeaveRequestList() {
+        return leaveRequestList;
+    }
+
+    public void setLeaveRequestList(List<LeaveRequest> leaveRequestList) {
+        this.leaveRequestList = leaveRequestList;
     }
 
 

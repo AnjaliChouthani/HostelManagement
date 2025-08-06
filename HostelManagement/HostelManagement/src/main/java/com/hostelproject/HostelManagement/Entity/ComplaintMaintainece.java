@@ -1,6 +1,7 @@
 package com.hostelproject.HostelManagement.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class ComplaintMaintainece {
     private LocalDate issueCreated;
     @ManyToOne
     @JoinColumn(name="student_id")
+    @JsonBackReference
     private Student student;
 
     public Long getId() {
@@ -33,7 +35,7 @@ public class ComplaintMaintainece {
         this.issueType = issueType;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 

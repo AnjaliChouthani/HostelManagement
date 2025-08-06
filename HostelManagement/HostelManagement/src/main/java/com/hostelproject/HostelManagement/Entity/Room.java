@@ -1,23 +1,28 @@
 package com.hostelproject.HostelManagement.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-public class Room {
+@Table(name="room",uniqueConstraints = @UniqueConstraint(columnNames="roomNumber"))
 
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name="roomNumber",nullable = false)
     private String roomNumber;
     private String roomType;
-    @JsonIgnore
-    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Student> studentList;
     private  int capacity;
     private int currentNumberStudent;
+
 
     public Long getId() {
         return id;

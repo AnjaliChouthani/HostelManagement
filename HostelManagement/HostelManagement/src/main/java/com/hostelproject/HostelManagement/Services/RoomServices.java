@@ -23,7 +23,7 @@ public class RoomServices {
         //check if room is already in the database then return already exist room
        Optional<Room> roomOptional= roomRepository.findByRoomNumber(room.getRoomNumber());
 
-       if(!roomOptional.isPresent()){
+       if(roomOptional.isPresent()){
            return new ResponseEntity<>("Already Existed the Room Number "+room.getRoomNumber(), HttpStatus.CONFLICT);
        }
         roomRepository.save(room);
@@ -37,7 +37,7 @@ public class RoomServices {
            return new ResponseEntity<>("Room Number "+roomNumber+" Not Found",HttpStatus.NOT_FOUND);
        }
        Room roomdetails=roomOptional.get();
-       if(roomdetails.getStudentList()!=null){
+       if(roomdetails.getStudentList()!=null && !roomdetails.getStudentList().isEmpty()){
            return new ResponseEntity<>("Room has Students ",HttpStatus.BAD_REQUEST);
        }
        roomRepository.delete(roomdetails);
@@ -68,6 +68,4 @@ public class RoomServices {
        }
         return optionalRoom.get();
     }
-
-
 }

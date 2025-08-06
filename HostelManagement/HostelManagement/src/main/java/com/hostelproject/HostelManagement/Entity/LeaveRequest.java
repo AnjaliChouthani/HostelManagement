@@ -1,6 +1,7 @@
 package com.hostelproject.HostelManagement.Entity;
+import com.hostelproject.HostelManagement.Entity.LeaveStatus;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -12,26 +13,35 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+@JsonBackReference
      @ManyToOne
       @JoinColumn(name="student_id")
     private Student student;
-
-
+@Enumerated(EnumType.STRING)
+   private LeaveStatus leaveStatus;
     private String reason;
     private LocalDate startDate;
     private LocalDate endDate;
 
 
-    public LeaveRequest(Long id, Student student, String reason, LocalDate startDate, LocalDate endDate) {
+    public LeaveRequest(Long id, Student student, LeaveStatus leaveStatus, String reason, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.student = student;
+        this.leaveStatus = leaveStatus;
         this.reason = reason;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
     public LeaveRequest() {
+    }
+
+    public LeaveStatus getLeaveStatus() {
+        return leaveStatus;
+    }
+
+    public void setLeaveStatus(LeaveStatus leaveStatus) {
+        this.leaveStatus = leaveStatus;
     }
 
     public Long getId() {
